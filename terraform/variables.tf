@@ -20,3 +20,13 @@ variable "vpc_cidr" {
     type        = string
     description = "vpc cidr"
 }
+
+variable "public_subnet_cidrs" {
+    type = list(string)
+    description = "IPv4 CIDR blocks(public)"
+}
+
+variable "private_subnet_cidrs" {
+    type = list(string)
+    description = "IPv4 CIDR blocks(private)"
+}
