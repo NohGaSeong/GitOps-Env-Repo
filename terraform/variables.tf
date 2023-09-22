@@ -30,3 +30,13 @@ variable "private_subnet_cidrs" {
     type = list(string)
     description = "IPv4 CIDR blocks(private)"
 }
+
+variable "enable_nat_gateway" {
+    default = true
+    type    = bool
+}
+
+variable "single_nat_gateway" {
+    default = false
+    type    = bool
+}
