@@ -5,7 +5,7 @@ variable "region" {
 }
 
 variable "namespace" {
-    default     = "test-eks" 
+    default     = "test" 
     type        = string
     description = "Project namespace"
 }
@@ -16,12 +16,7 @@ variable "environment" {
     description = "deployment evironment"
 }
 
-variable "purpose" {
+variable "vpc_cidr" {
     type        = string
-    description = "purpose of the resource"
-}
-
-variable "owner" {
-    type        = string 
-    description = "owner name"
+    description = "vpc cidr"
 }
