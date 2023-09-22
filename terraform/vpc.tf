@@ -45,3 +45,17 @@ resource "aws_subnet" "private_subnet" {
     )
 }
 
+resource "aws_internet_gateway" "igw" {
+    count = length(var.public_subnet_cidrs) > 0 ? 1 : 0
+    vpc_id = aws_vpc.vpc.id
+
+    tags = merge(
+        {
+            Name = "${var.namespace}-igw"
+        },
+        local.additional_tags
+    )
+}
+
+
+
