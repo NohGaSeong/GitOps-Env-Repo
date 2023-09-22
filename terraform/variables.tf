@@ -20,3 +20,8 @@ variable "purpose" {
     type        = string
     description = "purpose of the resource"
 }
+
+variable "owner" {
+    type        = string 
+    description = "owner name"
+}
