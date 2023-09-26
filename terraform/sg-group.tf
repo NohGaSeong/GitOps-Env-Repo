@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "cluster_allow_bastion_traffic" {
     to_port                         = var.ssh_port
     protocol                        = "tcp"
     security_group_id               = aws_security_group.cluster_sg.id
-    source_security_group_id        = aws_security_group.bastion-sg
+    source_security_group_id        = aws_security_group.bastion-sg.id
 }
 
 resource "aws_security_group" "node_sg" {
@@ -88,17 +88,19 @@ resource "aws_security_group" "node_sg" {
 }
 
 resource "aws_security_group_rule" "node_allow_cluster_traffic" {
-    type                = "ingress"
-    from_port           = 0
-    to_port             = 0
-    protocol            = aws_security_group.node_sg.id
-    security_group_id   = aws_security_group.cluster_sg.id
+    type                     = "ingress"
+    from_port                = 0
+    to_port                  = 0
+    protocol                 = "-1"
+    security_group_id        = aws_security_group.node_sg.id
+    source_security_group_id = aws_security_group.cluster_sg.id
 }
 
 resource "aws_security_group_rule" "node_allow_bastion_traffic" {
-    type                = "ingress"
-    from_port           = 0
-    to_port             = 0
-    protocol            = aws_security_group.node_sg.id
-    security_group_id   = aws_security_group.bastion-sg.id 
+    type                     = "ingress"
+    from_port                = var.ssh_port
+    to_port                  = var.ssh_port
+    protocol                 = "tcp"
+    security_group_id        = aws_security_group.node_sg.id
+    source_security_group_id = aws_security_group.bastion-sg.id 
 }
