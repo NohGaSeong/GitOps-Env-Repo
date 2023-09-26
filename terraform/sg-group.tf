@@ -46,6 +46,24 @@ resource "aws_security_group" "cluster_sg" {
     )
 }
 
+resource "aws_security_group_rule" "cluster_allow_node_traffic" {
+    type                = "ingress"
+    from_port           = 0
+    to_port             = 0 
+    protocol            = "-1"
+    security_group_id   = aws_security_group.cluster_sg.id
+    source_security_group_id = aws_security_group.node_sg.id
+}
+
+resource "aws_security_group_rule" "cluster_allow_bastion_traffic" {
+    type                            = "ingress"
+    from_port                       = var.ssh_port
+    to_port                         = var.ssh_port
+    protocol                        = "tcp"
+    security_group_id               = aws_security_group.cluster_sg.id
+    source_security_group_id        = aws_security_group.bastion-sg
+}
+
 resource "aws_security_group" "node_sg" {
     name    = "${var.namespace}-node-sg"
     vpc_id  = aws_vpc.vpc.id
@@ -67,4 +85,20 @@ resource "aws_security_group" "node_sg" {
         },
         local.additional_tags
     )
+}
+
+resource "aws_security_group_rule" "node_allow_cluster_traffic" {
+    type                = "ingress"
+    from_port           = 0
+    to_port             = 0
+    protocol            = aws_security_group.node_sg.id
+    security_group_id   = aws_security_group.cluster_sg.id
+}
+
+resource "aws_security_group_rule" "node_allow_bastion_traffic" {
+    type                = "ingress"
+    from_port           = 0
+    to_port             = 0
+    protocol            = aws_security_group.node_sg.id
+    security_group_id   = aws_security_group.bastion-sg.id 
 }
