@@ -45,3 +45,8 @@ variable "ssh_port" {
     default = 22
     type    = number 
 }
+
+variable "cluster_version" {
+    default = null
+    type    = string
+}
