@@ -33,3 +33,28 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resourece_controller" {
     role       = aws_iam_role.eks_cluster_role.name
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
 }
+
+resource "aws_eks_cluster" "eks_cluster" {
+    name     = "${var.namespace}-cluster"
+    role_arn = aws_iam_role.eks_cluster_role.arn
+    version  = var.cluster_version
+
+    vpc_config {
+        endpoint_private_access = true
+        endpoint_public_access  = true
+        security_group_ids      = [aws_security_group.cluster_sg.id]
+        subnet_ids              = concat([for subnet in aws_subnet.public_subnet : subnet.id], [for subnet in aws_subnet.private_subnet : subnet.id]) 
+    }
+    
+    depends_on = [
+        aws_iam_role_policy_attachment.eks_cluster_policy,
+        aws_iam_role_policy_attachment.eks_vpc_resourece_controller
+    ]
+
+    tags = merge(
+        {
+            Name = "${var.namespace}-cluster"
+        },
+        local.additional_tags
+    )
+}
