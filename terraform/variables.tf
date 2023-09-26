@@ -40,3 +40,8 @@ variable "single_nat_gateway" {
     default = false
     type    = bool
 }
+
+variable "ssh_port" {
+    default = 22
+    type    = number 
+}
